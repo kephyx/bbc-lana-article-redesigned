@@ -19,6 +19,9 @@
             --bbc-text: #141414;
             --bbc-blue: #1976d2;
             --bbc-blue-dark: #1565c0;
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         * {
@@ -29,7 +32,7 @@
 
         body {
             font-family: 'Reith Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: var(--bbc-white);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             color: var(--bbc-text);
             line-height: 1.6;
             overflow-x: hidden;
@@ -42,39 +45,49 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bbc-black);
+            background: linear-gradient(135deg, var(--bbc-black) 0%, #1a1a1a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            transition: opacity 0.5s ease;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .loading-screen.hidden {
             opacity: 0;
-            pointer-events: none;
+            visibility: hidden;
+            transform: scale(1.1);
         }
 
         .bbc-loader {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
         }
 
         .bbc-logo-loader {
             background: var(--bbc-white);
             color: var(--bbc-black);
-            padding: 8px 12px;
-            font-weight: bold;
-            font-size: 24px;
-            letter-spacing: -1px;
+            padding: 16px 24px;
+            font-weight: 700;
+            font-size: 32px;
+            letter-spacing: -2px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-heavy);
+            animation: logoFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--bbc-grey-medium);
-            border-top: 3px solid var(--bbc-red);
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid var(--bbc-red);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -84,19 +97,27 @@
             100% { transform: rotate(360deg); }
         }
 
+        .loading-text {
+            color: var(--bbc-white);
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
         /* Cookie Banner */
         .cookie-banner {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, var(--bbc-black) 0%, #333333 100%);
+            background: linear-gradient(135deg, var(--bbc-black) 0%, #2c2c2c 100%);
             color: var(--bbc-white);
-            padding: 20px;
+            padding: 24px;
             z-index: 1000;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .cookie-banner.show {
@@ -110,47 +131,65 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 24px;
         }
 
         .cookie-text {
             flex: 1;
             min-width: 300px;
             font-size: 16px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .cookie-text strong {
             color: var(--bbc-red);
+            font-weight: 600;
         }
 
         .cookie-buttons {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             flex-wrap: wrap;
         }
 
         .cookie-btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cookie-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cookie-btn:hover::before {
+            left: 100%;
         }
 
         .cookie-accept {
-            background: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
             color: var(--bbc-white);
+            box-shadow: var(--shadow-medium);
         }
 
         .cookie-accept:hover {
-            background: var(--bbc-dark-red);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(230, 0, 0, 0.4);
         }
 
         .cookie-settings {
@@ -162,15 +201,16 @@
         .cookie-settings:hover {
             background: var(--bbc-white);
             color: var(--bbc-black);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
 
         /* BBC Header */
         .bbc-header {
-            background: var(--bbc-black);
-            padding: 12px 0;
+            background: linear-gradient(135deg, var(--bbc-black) 0%, #1a1a1a 100%);
+            padding: 16px 0;
             position: relative;
             z-index: 100;
+            box-shadow: var(--shadow-medium);
         }
 
         .bbc-header-content {
@@ -179,46 +219,66 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
         .bbc-logo {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 24px;
         }
 
         .bbc-logo-text {
-            background: var(--bbc-white);
+            background: linear-gradient(135deg, var(--bbc-white) 0%, #f0f0f0 100%);
             color: var(--bbc-black);
             font-weight: 700;
-            padding: 6px 12px;
-            font-size: 22px;
-            letter-spacing: -1px;
-            transition: transform 0.2s ease;
+            padding: 12px 20px;
+            font-size: 24px;
+            letter-spacing: -2px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow-light);
         }
 
         .bbc-logo-text:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(-1deg);
+            box-shadow: var(--shadow-medium);
         }
 
         .watch-live {
-            background: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
             color: var(--bbc-white);
-            padding: 8px 16px;
+            padding: 12px 20px;
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: var(--shadow-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .watch-live::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .watch-live:hover::before {
+            left: 100%;
         }
 
         .watch-live:hover {
-            background: var(--bbc-dark-red);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(230, 0, 0, 0.4);
         }
 
         .header-actions {
@@ -228,59 +288,64 @@
         }
 
         .subscribe-btn {
-            background: var(--bbc-blue);
+            background: linear-gradient(135deg, var(--bbc-blue) 0%, var(--bbc-blue-dark) 100%);
             color: var(--bbc-white);
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: var(--shadow-light);
         }
 
         .subscribe-btn:hover {
-            background: var(--bbc-blue-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(25, 118, 210, 0.4);
         }
 
         .sign-in {
             color: var(--bbc-white);
             text-decoration: none;
             font-size: 14px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: 2px solid var(--bbc-white);
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .sign-in:hover {
             background: var(--bbc-white);
             color: var(--bbc-black);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
         }
 
         /* Navigation */
         .bbc-nav {
-            background: var(--bbc-white);
-            border-bottom: 2px solid var(--bbc-grey-medium);
+            background: linear-gradient(135deg, var(--bbc-white) 0%, #f8f9fa 100%);
+            border-bottom: 3px solid var(--bbc-grey-medium);
             position: sticky;
             top: 0;
             z-index: 99;
-            transition: box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .bbc-nav.scrolled {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-medium);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .nav-content {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
         .main-nav {
@@ -299,24 +364,41 @@
         .nav-item {
             color: var(--bbc-text);
             text-decoration: none;
-            padding: 16px 20px;
+            padding: 20px 24px;
             font-size: 15px;
             font-weight: 500;
             white-space: nowrap;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
         }
 
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--bbc-red), var(--bbc-dark-red));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover::before {
+            transform: scaleX(1);
+        }
+
         .nav-item:hover {
-            background: var(--bbc-grey-light);
-            border-bottom-color: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
+            color: var(--bbc-red);
         }
 
         .nav-item.active {
             border-bottom-color: var(--bbc-red);
             font-weight: 600;
             color: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
         }
 
         .sub-nav {
@@ -327,7 +409,7 @@
             overflow-x: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            background: var(--bbc-grey-light);
+            background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
         }
 
         .sub-nav::-webkit-scrollbar {
@@ -337,33 +419,51 @@
         .sub-nav-item {
             color: var(--bbc-grey-dark);
             text-decoration: none;
-            padding: 12px 20px;
+            padding: 16px 24px;
             font-size: 13px;
             white-space: nowrap;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             font-weight: 500;
+            position: relative;
+        }
+
+        .sub-nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--bbc-red);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .sub-nav-item:hover::after {
+            width: 80%;
         }
 
         .sub-nav-item:hover {
             color: var(--bbc-red);
             background: var(--bbc-white);
+            transform: translateY(-2px);
         }
 
         /* Main Content */
         .main-container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 32px 20px;
+            padding: 40px 24px;
             display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 40px;
-            animation: fadeInUp 0.8s ease;
+            grid-template-columns: 1fr 350px;
+            gap: 48px;
+            animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -372,26 +472,34 @@
         }
 
         .article-content {
-            max-width: 800px;
+            background: var(--bbc-white);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--bbc-grey-medium);
         }
 
         .article-header {
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .article-title {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 20px;
+            line-height: 1.1;
+            margin-bottom: 24px;
             color: var(--bbc-text);
-            animation: slideInLeft 0.8s ease;
+            animation: slideInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: linear-gradient(135deg, var(--bbc-text) 0%, var(--bbc-grey-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         @keyframes slideInLeft {
             from {
                 opacity: 0;
-                transform: translateX(-50px);
+                transform: translateX(-60px);
             }
             to {
                 opacity: 1;
@@ -402,32 +510,37 @@
         .article-meta {
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 24px;
+            margin-bottom: 24px;
             font-size: 15px;
             color: var(--bbc-grey-dark);
             flex-wrap: wrap;
         }
 
         .article-category {
-            color: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
+            color: var(--bbc-white);
+            padding: 6px 12px;
+            border-radius: 20px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-size: 12px;
         }
 
         .reading-time {
-            background: var(--bbc-grey-light);
-            padding: 4px 8px;
-            border-radius: 4px;
+            background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
+            border: 1px solid var(--bbc-grey-medium);
         }
 
         .article-actions {
             display: flex;
-            gap: 15px;
-            margin-bottom: 32px;
+            gap: 16px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
         }
 
@@ -435,51 +548,71 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 20px;
+            padding: 14px 24px;
             border: 2px solid var(--bbc-grey-medium);
-            background: var(--bbc-white);
+            background: linear-gradient(135deg, var(--bbc-white) 0%, var(--bbc-grey-light) 100%);
             color: var(--bbc-text);
             text-decoration: none;
             font-size: 14px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             cursor: pointer;
             font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 0, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
         }
 
         .action-btn:hover {
-            background: var(--bbc-grey-light);
+            background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
             border-color: var(--bbc-red);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
         }
 
         .action-btn.active {
-            background: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
             color: var(--bbc-white);
             border-color: var(--bbc-red);
+            box-shadow: var(--shadow-medium);
         }
 
         .action-btn.active:hover {
-            background: var(--bbc-dark-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(230, 0, 0, 0.4);
         }
 
         .author-info {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 32px;
-            padding: 20px;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 24px;
             background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
-            border-radius: 12px;
-            border-left: 4px solid var(--bbc-red);
-            animation: slideInRight 0.8s ease;
+            border-radius: 16px;
+            border-left: 6px solid var(--bbc-red);
+            animation: slideInRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow-light);
         }
 
         @keyframes slideInRight {
             from {
                 opacity: 0;
-                transform: translateX(50px);
+                transform: translateX(60px);
             }
             to {
                 opacity: 1;
@@ -488,8 +621,8 @@
         }
 
         .author-avatar {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
             display: flex;
@@ -497,14 +630,15 @@
             justify-content: center;
             color: var(--bbc-white);
             font-weight: 700;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
+            font-size: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 3px solid var(--bbc-white);
         }
 
         .author-details h3 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             color: var(--bbc-text);
         }
 
@@ -517,100 +651,136 @@
         .article-image {
             width: 100%;
             height: auto;
-            border-radius: 12px;
-            margin: 32px 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            border-radius: 16px;
+            margin: 40px 0;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            border: 1px solid var(--bbc-grey-medium);
         }
 
         .article-image:hover {
-            transform: scale(1.02);
+            transform: scale(1.02) rotate(0.5deg);
+            box-shadow: var(--shadow-heavy);
         }
 
         .image-caption {
             font-size: 14px;
             color: var(--bbc-grey-dark);
-            margin-top: 12px;
+            margin-top: 16px;
             font-style: italic;
-            line-height: 1.4;
+            line-height: 1.5;
+            text-align: center;
+            padding: 0 20px;
         }
 
         .article-text {
-            font-size: 18px;
-            line-height: 1.7;
-            margin-bottom: 32px;
+            font-size: 19px;
+            line-height: 1.8;
+            margin-bottom: 40px;
         }
 
         .article-text p {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .quote {
             background: linear-gradient(135deg, var(--bbc-grey-light) 0%, #f0f0f0 100%);
-            border-left: 6px solid var(--bbc-red);
-            padding: 24px 32px;
-            margin: 32px 0;
+            border-left: 8px solid var(--bbc-red);
+            padding: 32px 40px;
+            margin: 40px 0;
             font-style: italic;
-            font-size: 22px;
-            line-height: 1.5;
-            border-radius: 0 12px 12px 0;
+            font-size: 24px;
+            line-height: 1.6;
+            border-radius: 0 16px 16px 0;
             position: relative;
+            box-shadow: var(--shadow-light);
         }
 
         .quote::before {
             content: '"';
-            font-size: 60px;
+            font-size: 80px;
             color: var(--bbc-red);
             position: absolute;
-            top: -10px;
-            left: 20px;
+            top: -20px;
+            left: 30px;
             font-family: serif;
+            opacity: 0.3;
         }
 
         /* Sidebar */
         .sidebar {
-            background: var(--bbc-grey-light);
-            padding: 32px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, var(--bbc-white) 0%, var(--bbc-grey-light) 100%);
+            padding: 40px;
+            border-radius: 16px;
             height: fit-content;
             position: sticky;
-            top: 100px;
+            top: 120px;
             border: 1px solid var(--bbc-grey-medium);
-            animation: slideInRight 1s ease;
+            animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow-light);
         }
 
         .sidebar h3 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 600;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             color: var(--bbc-text);
-            border-bottom: 2px solid var(--bbc-red);
-            padding-bottom: 8px;
+            border-bottom: 3px solid var(--bbc-red);
+            padding-bottom: 12px;
+            position: relative;
+        }
+
+        .sidebar h3::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--bbc-red), var(--bbc-dark-red));
         }
 
         .related-story {
             display: block;
             text-decoration: none;
             color: var(--bbc-text);
-            margin-bottom: 20px;
-            padding: 16px;
+            margin-bottom: 24px;
+            padding: 20px;
             background: var(--bbc-white);
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border: 1px solid var(--bbc-grey-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .related-story::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 0, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .related-story:hover::before {
+            left: 100%;
         }
 
         .related-story:hover {
-            background: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
             color: var(--bbc-white);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(230, 0, 0, 0.2);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-heavy);
         }
 
         .related-story h4 {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             line-height: 1.4;
         }
 
@@ -621,7 +791,7 @@
         }
 
         .related-story:hover .meta {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* Modal */
@@ -638,7 +808,8 @@
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
         }
 
         .modal.show {
@@ -647,51 +818,79 @@
         }
 
         .modal-content {
-            background: var(--bbc-white);
-            padding: 32px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, var(--bbc-white) 0%, var(--bbc-grey-light) 100%);
+            padding: 40px;
+            border-radius: 16px;
             max-width: 500px;
             width: 90%;
             text-align: center;
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
+            transform: scale(0.8) rotate(-5deg);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid var(--bbc-grey-medium);
         }
 
         .modal.show .modal-content {
-            transform: scale(1);
+            transform: scale(1) rotate(0deg);
         }
 
         .modal h3 {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             color: var(--bbc-text);
+            font-size: 24px;
         }
 
         .modal p {
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             color: var(--bbc-grey-dark);
+            line-height: 1.6;
         }
 
         .modal-btn {
-            background: var(--bbc-red);
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
             color: var(--bbc-white);
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 14px 32px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .modal-btn:hover {
-            background: var(--bbc-dark-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(230, 0, 0, 0.4);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--bbc-red) 0%, var(--bbc-dark-red) 100%);
+            color: var(--bbc-white);
+            padding: 20px 28px;
+            border-radius: 12px;
+            z-index: 1500;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid var(--bbc-dark-red);
+        }
+
+        .notification.show {
+            transform: translateX(0);
         }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
             .main-container {
                 grid-template-columns: 1fr;
-                gap: 32px;
-                padding: 24px 16px;
+                gap: 40px;
+                padding: 32px 20px;
             }
 
             .sidebar {
@@ -700,15 +899,19 @@
             }
 
             .article-title {
-                font-size: 36px;
+                font-size: 40px;
+            }
+
+            .article-content {
+                padding: 32px;
             }
         }
 
         @media (max-width: 768px) {
             .bbc-header-content {
                 flex-direction: column;
-                gap: 16px;
-                padding: 0 16px;
+                gap: 20px;
+                padding: 0 20px;
             }
 
             .header-actions {
@@ -718,17 +921,17 @@
             }
 
             .article-title {
-                font-size: 28px;
+                font-size: 32px;
             }
 
             .article-text {
-                font-size: 16px;
+                font-size: 17px;
             }
 
             .cookie-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 16px;
+                gap: 20px;
             }
 
             .cookie-buttons {
@@ -750,46 +953,59 @@
             }
 
             .nav-item {
-                padding: 12px 16px;
+                padding: 16px 20px;
                 font-size: 14px;
             }
 
             .sub-nav-item {
-                padding: 10px 16px;
+                padding: 12px 20px;
                 font-size: 12px;
+            }
+
+            .article-content {
+                padding: 24px;
+                border-radius: 12px;
+            }
+
+            .sidebar {
+                padding: 24px;
             }
         }
 
         @media (max-width: 480px) {
             .main-container {
-                padding: 16px 12px;
+                padding: 20px 16px;
             }
 
             .article-title {
-                font-size: 24px;
+                font-size: 28px;
             }
 
             .quote {
-                font-size: 18px;
-                padding: 20px 24px;
+                font-size: 20px;
+                padding: 24px 28px;
+            }
+
+            .bbc-header-content {
+                padding: 0 16px;
+            }
+
+            .nav-content {
+                padding: 0 16px;
+            }
+
+            .article-content {
+                padding: 20px;
             }
 
             .sidebar {
                 padding: 20px;
             }
-
-            .bbc-header-content {
-                padding: 0 12px;
-            }
-
-            .nav-content {
-                padding: 0 12px;
-            }
         }
 
         /* Animations */
         .fade-in {
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn 0.8s ease;
         }
 
         @keyframes fadeIn {
@@ -798,41 +1014,37 @@
         }
 
         .pulse {
-            animation: pulse 2s infinite;
+            animation: pulse 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
 
-        /* Notification */
-        .notification {
+        /* Scroll Progress Bar */
+        .scroll-progress {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bbc-red);
-            color: var(--bbc-white);
-            padding: 16px 24px;
-            border-radius: 8px;
-            z-index: 1500;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
-        }
-
-        .notification.show {
-            transform: translateX(0);
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--bbc-red), var(--bbc-dark-red));
+            z-index: 1001;
+            transition: width 0.1s ease;
         }
     </style>
 </head>
 <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="bbc-loader">
             <div class="bbc-logo-loader">BBC</div>
             <div class="spinner"></div>
+            <div class="loading-text">Loading BBC News...</div>
         </div>
     </div>
 
@@ -840,7 +1052,7 @@
     <div class="cookie-banner" id="cookieBanner">
         <div class="cookie-content">
             <div class="cookie-text">
-                <strong>We value your privacy.</strong> We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies. You can manage your preferences at any time.
+                <strong>🍪 We value your privacy.</strong> We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies. You can manage your preferences at any time.
             </div>
             <div class="cookie-buttons">
                 <button class="cookie-btn cookie-settings" onclick="showCookieSettings()">Cookie Settings</button>
@@ -868,7 +1080,7 @@
         <div class="bbc-header-content">
             <div class="bbc-logo">
                 <div class="bbc-logo-text pulse">BBC</div>
-                <a href="#" class="watch-live" onclick="showNotification('Live stream would start here')">🔴 Watch Live</a>
+                <a href="#" class="watch-live" onclick="showNotification('🔴 Live stream would start here')">🔴 Watch Live</a>
             </div>
             <div class="header-actions">
                 <a href="#" class="subscribe-btn" onclick="showModal('Subscribe', 'Thank you for your interest! Subscription features would be available here.')">Subscribe</a>
@@ -895,19 +1107,19 @@
                 <a href="#" class="nav-item" onclick="setActiveNav(this)">Live</a>
             </div>
             <div class="sub-nav">
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Israel-Gaza War coverage')">Israel-Gaza War</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to War in Ukraine coverage')">War in Ukraine</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to US & Canada news')">US & Canada</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to UK news')">UK</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Africa news')">Africa</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Asia news')">Asia</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Australia news')">Australia</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Europe news')">Europe</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Latin America news')">Latin America</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to Middle East news')">Middle East</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to In Pictures section')">In Pictures</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to BBC InDepth')">BBC InDepth</a>
-                <a href="#" class="sub-nav-item" onclick="showNotification('Navigating to BBC Verify')">BBC Verify</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('📰 Navigating to Israel-Gaza War coverage')">Israel-Gaza War</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🌍 Navigating to War in Ukraine coverage')">War in Ukraine</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🇺🇸 Navigating to US & Canada news')">US & Canada</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🇬🇧 Navigating to UK news')">UK</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🌍 Navigating to Africa news')">Africa</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🌏 Navigating to Asia news')">Asia</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🇦🇺 Navigating to Australia news')">Australia</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🇪🇺 Navigating to Europe news')">Europe</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🌎 Navigating to Latin America news')">Latin America</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🕌 Navigating to Middle East news')">Middle East</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('📸 Navigating to In Pictures section')">In Pictures</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('🔍 Navigating to BBC InDepth')">BBC InDepth</a>
+                <a href="#" class="sub-nav-item" onclick="showNotification('✅ Navigating to BBC Verify')">BBC Verify</a>
             </div>
         </div>
     </nav>
@@ -949,7 +1161,7 @@
                 </div>
             </div>
 
-            <img src="images/lana-main.jpg" alt="The mysterious pop icon may have been entirely AI-generated according to leaked documents" class="article-image" onclick="enlargeImage(this)">
+            <img src="images/lana-portrait.jpg" alt="The mysterious pop icon may have been entirely AI-generated according to leaked documents" class="article-image" onclick="enlargeImage(this)">
             <p class="image-caption">The mysterious pop icon may have been entirely AI-generated according to leaked documents</p>
 
             <div class="article-text" id="articleText">
@@ -957,12 +1169,12 @@
 
                 <p>The documents, obtained by a whistleblower and verified by several independent AI researchers, describe a covert project called LANA (Large-scale Audio-Neural Architecture), launched in 2008 by a coalition of music executives and Silicon Valley developers.</p>
 
-                <img src="images/ai-project.jpg" alt="The LANA project allegedly used advanced AI to create an entirely artificial artist" class="article-image" onclick="enlargeImage(this)">
+                <img src="images/ai-concept.jpg" alt="The LANA project allegedly used advanced AI to create an entirely artificial artist" class="article-image" onclick="enlargeImage(this)">
                 <p class="image-caption">The LANA project allegedly used advanced AI to create an entirely artificial artist</p>
 
                 <p>According to the leak, the project used early generative AI models to create an entirely artificial artist — complete with a voice model, generated lyrics, social media presence, and even deepfake performances. Her debut album <em>Born to Die</em>, which critics praised for its haunting vintage aesthetic and cinematic sound, was allegedly the first commercial product fully generated by the AI.</p>
 
-                <img src="images/born-to-die.jpg" alt="The 'Born to Die' album cover - allegedly the first fully AI-generated commercial music release" class="article-image" onclick="enlargeImage(this)">
+                <img src="images/born-to-die-album.png" alt="The 'Born to Die' album cover - allegedly the first fully AI-generated commercial music release" class="article-image" onclick="enlargeImage(this)">
                 <p class="image-caption">The "Born to Die" album cover - allegedly the first fully AI-generated commercial music release</p>
 
                 <div class="quote">
@@ -971,7 +1183,7 @@
 
                 <p>Despite the shocking nature of the claims, BBC has reached out to Interscope Records and representatives for "Lana Del Rey" — none have responded.</p>
 
-                <img src="images/live-performance.jpg" alt="Live performances may have used sophisticated deepfake technology, according to the leaked documents" class="article-image" onclick="enlargeImage(this)">
+                <img src="images/lana-performing.jpg" alt="Live performances may have used sophisticated deepfake technology, according to the leaked documents" class="article-image" onclick="enlargeImage(this)">
                 <p class="image-caption">Live performances may have used sophisticated deepfake technology, according to the leaked documents</p>
 
                 <p>Fans are divided. Some claim this only deepens their appreciation of the artistry. Others feel betrayed.</p>
@@ -991,19 +1203,19 @@
 
         <aside class="sidebar">
             <h3>Related Stories</h3>
-            <a href="#" class="related-story" onclick="showNotification('Loading related article...')">
+            <a href="#" class="related-story" onclick="showNotification('📰 Loading related article...')">
                 <h4>AI in Music: The Future of Creative Industries</h4>
                 <div class="meta">Technology • 1 day ago</div>
             </a>
-            <a href="#" class="related-story" onclick="showNotification('Loading related article...')">
+            <a href="#" class="related-story" onclick="showNotification('🤖 Loading related article...')">
                 <h4>Deepfake Technology Raises Questions About Authenticity</h4>
                 <div class="meta">Technology • 3 days ago</div>
             </a>
-            <a href="#" class="related-story" onclick="showNotification('Loading related article...')">
+            <a href="#" class="related-story" onclick="showNotification('🎵 Loading related article...')">
                 <h4>Music Industry Grapples with AI-Generated Content</h4>
                 <div class="meta">Entertainment • 1 week ago</div>
             </a>
-            <a href="#" class="related-story" onclick="showNotification('Loading related article...')">
+            <a href="#" class="related-story" onclick="showNotification('🎭 Loading related article...')">
                 <h4>The Ethics of Artificial Artists in Popular Culture</h4>
                 <div class="meta">Culture • 2 weeks ago</div>
             </a>
@@ -1021,14 +1233,14 @@
             // Simulate loading
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
-            }, 2000);
+            }, 2500);
 
             // Show cookie banner after loading
             setTimeout(() => {
                 if (!localStorage.getItem('cookiesAccepted')) {
                     showCookieBanner();
                 }
-            }, 3000);
+            }, 4000);
 
             // Check saved preferences
             if (localStorage.getItem('articleSaved')) {
@@ -1056,7 +1268,19 @@
                     }
                 });
             });
+
+            // Initialize scroll progress
+            updateScrollProgress();
         });
+
+        // Scroll Progress
+        function updateScrollProgress() {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }
 
         // Cookie Management
         function showCookieBanner() {
@@ -1068,7 +1292,7 @@
             const banner = document.getElementById('cookieBanner');
             banner.classList.remove('show');
             localStorage.setItem('cookiesAccepted', 'true');
-            showNotification('Cookie preferences saved!');
+            showNotification('🍪 Cookie preferences saved!');
         }
 
         function showCookieSettings() {
@@ -1086,7 +1310,7 @@
                     text: 'Shocking revelation about the pop icon - BBC News',
                     url: window.location.href
                 }).then(() => {
-                    showNotification('Article shared successfully!');
+                    showNotification('📤 Article shared successfully!');
                 }).catch(() => {
                     fallbackShare();
                 });
@@ -1097,7 +1321,7 @@
 
         function fallbackShare() {
             navigator.clipboard.writeText(window.location.href).then(() => {
-                showNotification('Link copied to clipboard!');
+                showNotification('📋 Link copied to clipboard!');
             }).catch(() => {
                 showModal('Share Article', 'Copy this link to share: ' + window.location.href);
             });
@@ -1111,12 +1335,12 @@
                 btn.classList.remove('active');
                 btn.innerHTML = '<span>🔖</span> Save';
                 localStorage.removeItem('articleSaved');
-                showNotification('Article removed from saved items');
+                showNotification('📝 Article removed from saved items');
             } else {
                 btn.classList.add('active');
                 btn.innerHTML = '<span>✅</span> Saved';
                 localStorage.setItem('articleSaved', 'true');
-                showNotification('Article saved successfully!');
+                showNotification('💾 Article saved successfully!');
             }
         }
 
@@ -1125,11 +1349,11 @@
             isTextLarge = !isTextLarge;
             
             if (isTextLarge) {
-                articleText.style.fontSize = '20px';
-                showNotification('Text size increased');
+                articleText.style.fontSize = '22px';
+                showNotification('🔍 Text size increased');
             } else {
-                articleText.style.fontSize = '18px';
-                showNotification('Text size reset');
+                articleText.style.fontSize = '19px';
+                showNotification('📖 Text size reset');
             }
         }
 
@@ -1138,13 +1362,13 @@
             const body = document.body;
             
             if (isDarkMode) {
-                body.style.background = '#1a1a1a';
+                body.style.background = 'linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%)';
                 body.style.color = '#ffffff';
-                showNotification('Dark mode enabled');
+                showNotification('🌙 Dark mode enabled');
             } else {
-                body.style.background = '#ffffff';
+                body.style.background = 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)';
                 body.style.color = '#141414';
-                showNotification('Light mode enabled');
+                showNotification('☀️ Light mode enabled');
             }
         }
 
@@ -1153,9 +1377,9 @@
             const modalContent = modal.querySelector('.modal-content');
             
             modalContent.innerHTML = `
-                <img src="${img.src}" alt="${img.alt}" style="max-width: 100%; max-height: 80vh; border-radius: 8px;">
-                <p style="margin-top: 16px; font-size: 14px; color: #666;">${img.alt}</p>
-                <button class="modal-btn" onclick="closeModal()" style="margin-top: 16px;">Close</button>
+                <img src="${img.src}" alt="${img.alt}" style="max-width: 100%; max-height: 80vh; border-radius: 12px; box-shadow: var(--shadow-medium);">
+                <p style="margin-top: 20px; font-size: 14px; color: #666; line-height: 1.5;">${img.alt}</p>
+                <button class="modal-btn" onclick="closeModal()" style="margin-top: 24px;">Close</button>
             `;
             
             modal.classList.add('show');
@@ -1170,7 +1394,7 @@
             // Add active class to clicked item
             element.classList.add('active');
             
-            showNotification(`Navigating to ${element.textContent}`);
+            showNotification(`🧭 Navigating to ${element.textContent}`);
         }
 
         function incrementViewCount() {
@@ -1185,6 +1409,9 @@
             } else {
                 nav.classList.remove('scrolled');
             }
+
+            // Update scroll progress
+            updateScrollProgress();
 
             // Update view count occasionally on scroll
             if (Math.random() < 0.01) {
@@ -1218,7 +1445,7 @@
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, 4000);
         }
 
         // Close modal when clicking outside
@@ -1263,12 +1490,21 @@
         // Add some interactive elements
         document.querySelectorAll('.article-image').forEach(img => {
             img.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.02)';
+                this.style.transform = 'scale(1.02) rotate(0.5deg)';
             });
             
             img.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
+                this.style.transform = 'scale(1) rotate(0deg)';
             });
+        });
+
+        // Add parallax effect to header
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const header = document.querySelector('.bbc-header');
+            if (header) {
+                header.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
         });
     </script>
 </body>
